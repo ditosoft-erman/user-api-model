@@ -1,14 +1,12 @@
 const express=require('express')
-
+const usercontroller=require("../controllers/UserController");    
 const router = require('express').Router();
 
 router.get("/",(req,res,next)=>{
     res.send("meow")
 })
 
-router.get("/erman",(req,res,next)=>{
-    res.send("Hello, Erman")
-})
+router.get("/alluser",usercontroller.getalluser)
 
 
 module.exports=router
