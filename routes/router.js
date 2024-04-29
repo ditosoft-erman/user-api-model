@@ -1,12 +1,13 @@
-const express=require('express')
+
 const usercontroller=require("../controllers/UserController");    
 const router = require('express').Router();
 
-router.get("/",(req,res,next)=>{
+router.get("/",(_req,res,next)=>{
     res.send("meow")
-})
+}),
 
 router.get("/alluser",usercontroller.getalluser)
-
+router.post("/adduser", usercontroller.addnewuser)
+    
 
 module.exports=router
