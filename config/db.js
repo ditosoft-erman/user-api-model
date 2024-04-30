@@ -1,15 +1,14 @@
-const mysql=require('mysql')
+const mysql = require("mysql");
 
-
-const db=mysql.createPool({
-    host:"localhost",
-    username:"root",
-    password:"",
-    database:"users_database"
+const db = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "users_database",
 });
-+db.getConnection(()=>{
-    console.log('connect to db successfully');
-})
 
+db.getConnection(() => {
+  console.log("connect to db successfully");
+});
 
-module.exports=db;
+module.exports = db;
