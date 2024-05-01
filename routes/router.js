@@ -11,5 +11,8 @@ router.get("/alluser", usercontroller.getalluser);
 router.post("/adduser", usercontroller.addnewuser);
 router.post("/deleteuser",[check("id").exists().withMessage("id is required").isNumeric().withMessage("id should be only number")], usercontroller.deleteuser);
 router.post("/updateuser", usercontroller.updateuser);
+router.post("/login", usercontroller.loginUser);
+
+
 
 module.exports = router;
