@@ -1,6 +1,8 @@
+const bcrypt = require('bcryptjs');
 const db = require("../config/db");
 
 class UserModel {
+
 
   static async getusers() {
     return new Promise((resolve) => {
@@ -11,22 +13,26 @@ class UserModel {
     });
   }
 
-  static async adduser(first_name, last_name, email, password) {
-    return new Promise((resolve) => {
-      db.query(
+    static async adduser(first_name, last_name, email, password) {
+    try {
+      // Hash the password
+       // sconst hashedPassword = await bcrypt.hash(password, 10);
+
+      // Insert user data with hashed password
+      const result = await db.query(
         "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
         [first_name, last_name, email, password],
-        (error, result) => {
-          if (!error) resolve(true);
-          else {
-            console.error("Error adding user:", error);
-            resolve(false);
-          }
-        }
+     
       );
-    });
-  }
 
+      // Check if insertion was successful
+      return result.affectedRows === 1;
+      
+    } catch (error) {
+      console.error("Error adding user:", error);
+      return false;
+    }
+  }
   static async deleteuser(id) {
     return new Promise((resolve) => {
       db.query("DELETE FROM users WHERE id=?", [id], (error, result) => {

@@ -1,5 +1,6 @@
 const userModel = require("../models/User");
 const { validationResult } = require("express-validator");
+const jwt = require('jsonwebtoken');
 
 class UserController {
   static async getalluser(req, res) {
@@ -13,9 +14,11 @@ class UserController {
     var email = req.body.email;
     var password = req.body.password;
     var x = await userModel.adduser(first_name, last_name, email, password);
-    console.log(x);
-    if (x == true) res.send("add successfully");
-    else res.send("add failed");
+    if (!x) res.send("add successfully");
+    else {
+      res.send("add failed");
+    }
+    
   }
 
   static async deleteuser(req, res) {
@@ -34,8 +37,8 @@ class UserController {
 
   static async updateuser(req, res) {
     const id = req.body.id;
-    const newname = req.body.name;
-    const newlastname = req.body.lastname;
+    const newname = req.body.first_name;
+    const newlastname = req.body.last_name;
     const newemail = req.body.email;
     const newpassword = req.body.password;
 
