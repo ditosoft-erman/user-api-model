@@ -1,46 +1,36 @@
-const bcrypt = require('bcryptjs');
 const db = require("../config/db");
+const { deleteuser } = require("../controllers/UserController");
 
 class UserModel {
-
-
   static async getusers() {
     return new Promise((resolve) => {
-      db.query("SELECT * FROM users", [], (error, result) => {
+      db.query("SELECT  * FROM users", [], (error, result) => {
         if (!error) resolve(result);
-        else resolve([]);
       });
     });
   }
 
-    static async adduser(first_name, last_name, email, password) {
-    try {
-      // Hash the password
-       // sconst hashedPassword = await bcrypt.hash(password, 10);
-
-      // Insert user data with hashed password
-      const result = await db.query(
-        "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
+  static async adduser(first_name, last_name, email, password) {
+    return new Promise((resolve) => {
+      db.query(
+        "insert into users (first_name,last_name,email,password) values(?,?,?,?)",
         [first_name, last_name, email, password],
-     
+        (e, r) => {
+          if (!e) resolve(true);
+          else {
+            console.log("error", e);
+            resolve(false);
+          }
+        }
       );
-
-      // Check if insertion was successful
-      return result.affectedRows === 1;
-      
-    } catch (error) {
-      console.error("Error adding user:", error);
-      return false;
-    }
+    });
   }
+
   static async deleteuser(id) {
     return new Promise((resolve) => {
-      db.query("DELETE FROM users WHERE id=?", [id], (error, result) => {
-        if (!error) resolve(true);
-        else {
-          console.error("Error deleting user:", error);
-          resolve(false);
-        }
+      db.query("delete from users where id=?", [id], (error, result) => {
+        if (error) resolve(false);
+        else resolve(true);
       });
     });
   }
@@ -48,14 +38,10 @@ class UserModel {
   static async edit(id, first_name, last_name, email, password) {
     return new Promise((resolve) => {
       db.query(
-        "UPDATE users SET first_name=?, last_name=?, email=?, password=? WHERE id=?",
+        "update users set first_name=?, last_name=?, email=?, password=? where id=?",
         [first_name, last_name, email, password, id],
         (error, result) => {
           if (!error) resolve(true);
-          else {
-            console.error("Error updating user:", error);
-            resolve(false);
-          }
         }
       );
     });
@@ -64,15 +50,14 @@ class UserModel {
   static async login(email, password) {
     return new Promise((resolve) => {
       db.query(
-        "SELECT * FROM users WHERE email=? AND password=?",
-        [email, password],
+        "SELECT * FROM users WHERE email=?",
+        [email],
         (error, result) => {
           if (!error && result.length > 0) {
-            
-            resolve(true);
+            const user = result[0];
+            resolve(user);
           } else {
-         
-            resolve(false);
+            resolve(null);
           }
         }
       );
